@@ -22,7 +22,7 @@ import (
 )
 
 // $BPF_CLANG and $BPF_CFLAGS are set by the Makefile.
-//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc $BPF_CLANG -cflags $BPF_CFLAGS -target native -type event bpf uretprobe.c -- -I../headers
+//go:generate go run github.com/cilium/ebpf/cmd/bpf2go -cc $BPF_CLANG -cflags $BPF_CFLAGS -target arm64 -type event bpf uretprobe.c -- -I../headers
 
 const (
 	// The path to the ELF binary containing the function to trace.
@@ -108,6 +108,6 @@ func main() {
 			continue
 		}
 
-		log.Printf("%s:%s return value: %s", binPath, symbol, unix.ByteSliceToString(event.Line[:]))
+		log.Printf("%s:%s [PID:%d] return value: %s", binPath, symbol, event.Pid, unix.ByteSliceToString(event.Line[:]))
 	}
 }
